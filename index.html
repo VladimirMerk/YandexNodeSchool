@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<header>
+    <meta charset="utf-8">
+    <!-- scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="index.js"></script>
+    <!-- end scripts -->
+</header>
+<body>
+
+<style type="text/css" scoped>
+    input {padding: 5px 3px; margin: 1px; border: 1px solid #e3e3e3;}
+    input.error {border: 1px solid red;}
+    #resultContainer {position: relative; border: 1px solid #e3e3e3; min-height: 20px; padding: 5px 10px; margin-top: 10px;}
+    #resultContainer.success:before, #resultContainer.error:before, #resultContainer.progress:before {position: absolute; left: 7px; top: -8px; background-color: #ffffff; font-size: 11px; padding: 0px 3px;}
+    #resultContainer.success:before {content: "status: success";}
+    #resultContainer.error:before {content: "status: error";}
+    #resultContainer.progress:before {content: "status: progress";}
+</style>
+
+
+
+<!-- form myForm -->
+<strong>Form:</strong><br />
+<form method="POST" id="myForm" action="success.json">
+    <input type="text" name="fio" placeholder="ФИО" /><br />
+    <input type="text" name="email" placeholder="Email" /><br />
+    <input type="text" name="phone" placeholder="Телефон" />
+    <br /><br />
+    <input type="submit" id="submitButton" />
+</form>
+<!-- end form myForm -->
+<br /><br />
+<!-- div result -->
+<strong>Result:</strong><br />
+<div id="resultContainer"></div>
+<!-- end div result -->
+
+<body>
+</html>
