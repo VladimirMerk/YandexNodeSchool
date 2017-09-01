@@ -1,7 +1,7 @@
 var Form = function(form, result)
 {
     //Method for retrieving the form and result elements passed when the object is created, or by default, if the elements are not found or transferred
-    this.getElement = function(name, type, def) //
+    this.getElement = function(name, type, def)
     {
         var element = $(name);
         if (typeof name !== 'string' || ! element.length || ! element.is(type)) {
@@ -124,7 +124,6 @@ var Form = function(form, result)
                     }
                 }
             });
-
         } else {
             result.isValid = false;
         }
@@ -143,12 +142,14 @@ var Form = function(form, result)
                 var result = this.resultContainer;
                 result.removeClass('success error progress'); //Cleaning the resulting container from all classes
 
-                var request = function() {
+                var request = function() 
+                {
                     $.ajax({
                         url: action,
                         dataType: "json",
                         timeout:5000,
-                        success: function(data) {
+                        success: function(data) 
+                        {
                             if (data && data.status) {
                                 switch (data.status) {
                                     case 'success':
@@ -175,7 +176,8 @@ var Form = function(form, result)
                             }
                             form.find('input[type=submit], button').removeAttr('disabled');
                         },
-                        error: function(x, t, m) {
+                        error: function(x, t, m)
+                        {
                             result.addClass('error').text(t);
                             form.find('input[type=submit], button').removeAttr('disabled');
                         }
@@ -193,6 +195,7 @@ var Form = function(form, result)
 };
 
 var myForm = null;
-$(document).ready(function(){
+$(document).ready(function()
+{
     myForm = new Form('#myForm', '#resultContainer');
 });
