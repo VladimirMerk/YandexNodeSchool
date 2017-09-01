@@ -1,11 +1,9 @@
-var Form = function(form, result)
-{
+const Form = function(formArg, resultArg) {
     //Method for retrieving the form and result elements passed when the object is created, or by default, if the elements are not found or transferred
-    this.getElement = function(name, type, def) //
-    {
-        var element = $(name);
+    this.getElement = function(name, type, defaultId) {
+        let element = $(name);
         if (typeof name !== 'string' || ! element.length || ! element.is(type)) {
-            element = $(def);
+            element = $(defaultId);
         }
         if (element) {
             return element;
@@ -17,26 +15,25 @@ var Form = function(form, result)
     this.validFields = ['fio', 'email', 'phone'];
     this.formData = {};
     this.isReady = true;
-    this.formContainer = this.getElement(form, 'form', '#myForm');
-    this.resultContainer = this.getElement(result, 'div', '#resultContainer');
+    this.formContainer = this.getElement(formArg, 'form', '#myForm');
+    this.resultContainer = this.getElement(resultArg, 'div', '#resultContainer');
 
     if (! this.formContainer || ! this.resultContainer) {
         this.isReady = false
     } else {
-        this.formContainer.submit(this, function(e) //submit event listener
-        {
-            if (typeof e !== 'undefined') { e.preventDefault(); } // to stop the form from submitting
-            e.data.submit();
+        this.formContainer.submit(this, function(event) { //submit event listener
+            if (event != null) {
+                event.preventDefault(); // to stop the form from submitting
+            }
+            event.data.submit();
             return false;
         });
     }
 
-    this.setData = function(data)
-    {
-        if (this.isReady && data && typeof data === 'object') {
-            var form = this.formContainer;
-            $.each(this.validFields, function(k, field) // set only valid fields
-            {
+    this.setData = function(data) {
+        if (this.isReady && data != null && $.isPlainObject(data)) {
+            const form = this.formContainer;
+            $.each(this.validFields, function(key, field) { // set only valid fields
                 if (field in data && typeof data[field] === 'string') {
                     form.find(`input[name=${field}]`).val(data[field]);
                 }
@@ -44,25 +41,23 @@ var Form = function(form, result)
         }
     };
 
-    this.getData = function()
-    {
-        var result = {};
+    this.getData = function() {
+        let result = {};
         if (this.isReady) {
-            this.formContainer.find('input').not(':input[type=button], :input[type=submit], :input[type=reset]').each(function(k, field) //getting data from any form fields
-            {
+            this.formContainer.find('input')
+            .not(':input[type=button], :input[type=submit], :input[type=reset]')
+            .each(function(key, field) { //getting data from any form fields
                 result[field.name] = field.value.trim();
             });
         }
         return result;
     };
 
-    this.validate = function()
-    {
-        result = {isValid: true, errorFields: []};
+    this.validate = function() {
+        let result = {isValid: true, errorFields: []};
         if (this.isReady) {
-            var data = this.getData();
-            $.each(this.validFields, function(k, field)
-            {
+            const data = this.getData();
+            $.each(this.validFields, function(key, field) {
                 if (field in data) {
                     switch (field) { //Total validation of the existence of values
                         case 'fio':
@@ -78,8 +73,9 @@ var Form = function(form, result)
                     switch (field) {
                         case 'fio': //Validation fio field
                             if ($.inArray(field, result.errorFields) < 0) { //If there are no errors for this field
-                                var maxWord = 3;
-                                var pattern = new RegExp(`^(?:\\s+[a-zа-я]{2,}){${maxWord}}$`, 'gi'); //Only 3 words in Cyrillic or Latin characters separated by spaces, more than one character
+                                const maxWord = 3;
+                                //Only 3 words in Cyrillic or Latin characters separated by spaces, more than one character
+                                const pattern = new RegExp(`^(?:\\s+[a-zа-я]{2,}){${maxWord}}$`, 'gi');
                                 if (! ` ${data[field]}`.match(pattern)) {
                                     result.isValid = false;
                                     result.errorFields.push(field);
@@ -88,10 +84,11 @@ var Form = function(form, result)
                             break;
                         case 'email': //Validation email field
                             if ($.inArray(field, result.errorFields) < 0) { //If there are no errors for this field
-                                var allowedDomains = ['ya.ru', 'yandex.ru', 'yandex.ua', 'yandex.by', 'yandex.kz', 'yandex.com'];
-                                var emailPart = data[field].split('@');
+                                const allowedDomains = ['ya.ru', 'yandex.ru', 'yandex.ua', 'yandex.by', 'yandex.kz', 'yandex.com'];
+                                const emailPart = data[field].split('@');
                                 if (emailPart.length > 1) {
-                                    var pattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+$/gi; //Validating part of the email before @ as per the html5 specification
+                                    //Validating part of the email before @ as per the html5 specification
+                                    const pattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+$/gi;
                                     if (! emailPart[0].match(pattern)) {
                                         result.isValid = false;
                                         result.errorFields.push(field);
@@ -108,13 +105,18 @@ var Form = function(form, result)
                             break;
                         case 'phone': //Validation phone field
                             if ($.inArray(field, result.errorFields) < 0) { //If there are no errors for this field
-                                var maxSum = 30;
-                                var pattern = /\+7\(\d{3}\)\d{3}(?:-\d{2}){2}/g;
+                                const maxSum = 30;
+                                const pattern = /\+7\(\d{3}\)\d{3}(?:-\d{2}){2}/g;
                                 if (! data[field].match(pattern)) {
                                     result.isValid = false;
                                     result.errorFields.push(field);
                                 }
-                                var sumPhone = data[field].replace(/\D/g, '').split('').reduce(function(a,b){return parseInt(a)+parseInt(b)}, 0); //Converting a phone string into an array of numbers and summing it by reducie
+                                //Converting a phone string into an array of numbers and summing it by reducie
+                                const sumPhone = data[field].replace(/\D/g, '')
+                                .split('')
+                                .reduce(function(digitA,digitB) {
+                                    return parseInt(digitA)+parseInt(digitB);
+                                }, 0);
                                 if (sumPhone > maxSum) {
                                     result.isValid = false;
                                     result.errorFields.push(field);
@@ -130,26 +132,22 @@ var Form = function(form, result)
         return result;
     };
 
-    this.submit = function()
-    {
+    this.submit = function() {
         if (this.isReady) {
-            var form = this.formContainer;
+            const form = this.formContainer;
             form.find('input').removeClass('error'); //Clearing fields from errors
-            var validate = this.validate();
+            const validate = this.validate();
             if (validate.isValid) {
                 form.find('input[type=submit], button').attr('disabled', true); //Disabling buttons
-                var action = form.attr('action');
-                var result = this.resultContainer;
+                const action = form.attr('action');
+                const result = this.resultContainer;
                 result.removeClass('success error progress'); //Cleaning the resulting container from all classes
-
-                var request = function()
-                {
+                const request = function() {
                     $.ajax({
                         url: action,
                         dataType: "json",
                         timeout:5000,
-                        success: function(data)
-                        {
+                        success: function(data) {
                             if (data && data.status) {
                                 switch (data.status) {
                                     case 'success':
@@ -160,12 +158,14 @@ var Form = function(form, result)
                                         break;
                                     case 'progress':
                                         result.addClass(data.status).text('');
-                                        var timeout = 0;
+                                        let timeout = 0;
                                         if (data.timeout) {
-                                            timeout = parseInt(data.timeout)
+                                            timeout = parseInt(data.timeout);
                                         }
                                         timeout = timeout ? timeout * 1000 : 3 * 1000; //If timeout fail then set default value
-                                        setTimeout(function() {request();}, timeout); //Recalling request
+                                        setTimeout(function() { //Recalling request after timeout
+                                            request();
+                                        }, timeout);
                                         break;
                                     default:
                                         result.addClass('error').text('Response error');
@@ -176,9 +176,8 @@ var Form = function(form, result)
                             }
                             form.find('input[type=submit], button').removeAttr('disabled');
                         },
-                        error: function(x, t, m)
-                        {
-                            result.addClass('error').text(t);
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            result.addClass('error').text(textStatus);
                             form.find('input[type=submit], button').removeAttr('disabled');
                         }
                     });
@@ -186,8 +185,7 @@ var Form = function(form, result)
                 request();
             } else {
                 if (validate && validate.errorFields) {
-                    $.each(validate.errorFields, function(k, field)
-                    {
+                    $.each(validate.errorFields, function(k, field) {
                         form.find(`input[name=${field}]`).addClass('error');
                     });
                 }
@@ -196,8 +194,7 @@ var Form = function(form, result)
     };
 };
 
-var myForm = null;
-$(document).ready(function()
-{
+let myForm = null;
+$(document).ready(function() {
     myForm = new Form('#myForm', '#resultContainer');
 });
