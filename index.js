@@ -1,5 +1,6 @@
 const Form = function(formArg, resultArg) {
-    //Method for retrieving the form and result elements passed when the object is created, or by default, if the elements are not found or transferred
+    //Method for retrieving the form and result elements passed when the object is created, 
+    //or by default, if the elements are not found or transferred
     this.getElement = function(name, type, defaultId) {
         let element = $(name);
         if (typeof name !== 'string' || ! element.length || ! element.is(type)) {
