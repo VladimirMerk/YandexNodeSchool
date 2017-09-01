@@ -1,7 +1,7 @@
 var Form = function(form, result)
 {
     //Method for retrieving the form and result elements passed when the object is created, or by default, if the elements are not found or transferred
-    this.getElement = function(name, type, def)
+    this.getElement = function(name, type, def) //
     {
         var element = $(name);
         if (typeof name !== 'string' || ! element.length || ! element.is(type)) {
@@ -142,13 +142,13 @@ var Form = function(form, result)
                 var result = this.resultContainer;
                 result.removeClass('success error progress'); //Cleaning the resulting container from all classes
 
-                var request = function() 
+                var request = function()
                 {
                     $.ajax({
                         url: action,
                         dataType: "json",
                         timeout:5000,
-                        success: function(data) 
+                        success: function(data)
                         {
                             if (data && data.status) {
                                 switch (data.status) {
@@ -185,10 +185,12 @@ var Form = function(form, result)
                 }
                 request();
             } else {
-                $.each(result.errorFields, function(k, field)
-                {
-                    form.find(`input[name=${field}]`).addClass('error');
-                });
+                if (validate && validate.errorFields) {
+                    $.each(validate.errorFields, function(k, field)
+                    {
+                        form.find(`input[name=${field}]`).addClass('error');
+                    });
+                }
             }
         }
     };
