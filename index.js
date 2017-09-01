@@ -186,7 +186,7 @@ const Form = function(formArg, resultArg) {
                 request();
             } else {
                 if (validate && validate.errorFields) {
-                    $.each(validate.errorFields, function(k, field) {
+                    $.each(validate.errorFields, function(key, field) {
                         form.find(`input[name=${field}]`).addClass('error');
                     });
                 }
