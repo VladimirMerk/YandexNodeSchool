@@ -76,7 +76,7 @@ const Form = function(formArg, resultArg) {
                             if ($.inArray(field, result.errorFields) < 0) { //If there are no errors for this field
                                 const maxWord = 3;
                                 //Only 3 words in Cyrillic or Latin characters separated by spaces, more than one character
-                                const pattern = new RegExp(`^(?:\\s+[a-zа-я]{2,}){${maxWord}}$`, 'gi');
+                                let pattern = new RegExp(`^(?:\\s+[a-zа-я]{2,}){${maxWord}}$`, 'gi');
                                 if (! ` ${data[field]}`.match(pattern)) {
                                     result.isValid = false;
                                     result.errorFields.push(field);
@@ -89,7 +89,7 @@ const Form = function(formArg, resultArg) {
                                 const emailPart = data[field].split('@');
                                 if (emailPart.length > 1) {
                                     //Validating part of the email before @ as per the html5 specification
-                                    const pattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+$/gi;
+                                    let pattern = /^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+$/gi;
                                     if (! emailPart[0].match(pattern)) {
                                         result.isValid = false;
                                         result.errorFields.push(field);
@@ -107,7 +107,7 @@ const Form = function(formArg, resultArg) {
                         case 'phone': //Validation phone field
                             if ($.inArray(field, result.errorFields) < 0) { //If there are no errors for this field
                                 const maxSum = 30;
-                                const pattern = /\+7\(\d{3}\)\d{3}(?:-\d{2}){2}/g;
+                                let pattern = /\+7\(\d{3}\)\d{3}(?:-\d{2}){2}/g;
                                 if (! data[field].match(pattern)) {
                                     result.isValid = false;
                                     result.errorFields.push(field);
